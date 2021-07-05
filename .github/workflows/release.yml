@@ -31,13 +31,9 @@ jobs:
 
       - name: build
         run: |
-          LDFLAGS="-s -w -X main.Version=${VERSION}"
+          LDFLAGS='-s -w -X main.Version=${VERSION}'
           CMDPATH=./
-          GOOS=linux GOARCH=amd64 go build -ldflags="${LDFLAGS}" -gcflags=-trimpath=${GOPATH} -asmflags=-trimpath=${GOPATH} -v -o ./build/minthumb_amd64_linux ${CMDPATH}
-          GOOS=linux GOARCH=arm64 go build -ldflags="${LDFLAGS}" -gcflags=-trimpath=${GOPATH} -asmflags=-trimpath=${GOPATH} -v -o ./build/minthumb_arm64_linux ${CMDPATH}
-          GOOS=linux GOARCH=386 go build -ldflags="${LDFLAGS}" -gcflags=-trimpath=${GOPATH} -asmflags=-trimpath=${GOPATH} -v -o ./build/minthumb_386_linux ${CMDPATH}
-          GOOS=linux GOARCH=arm go build -ldflags="${LDFLAGS}" -gcflags=-trimpath=${GOPATH} -asmflags=-trimpath=${GOPATH} -v -o ./build/minthumb_arm_linux ${CMDPATH}
-          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="${LDFLAGS} -extldflags \"-static\"" -gcflags=-trimpath=${GOPATH} -asmflags=-trimpath=${GOPATH} -v -o ./build/minthumb_amd64_linux_static ${CMDPATH}
+          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="${LDFLAGS}" -gcflags=-trimpath=${GOPATH} -asmflags=-trimpath=${GOPATH} -v -o ./build/minthumb_amd64_linux ${CMDPATH}
 
 #      - name: compress
 #        uses: actions-github/upx@master
@@ -51,11 +47,5 @@ jobs:
         with:
           files: |
             ./build/minthumb_amd64_linux
-            ./build/minthumb_arm64_linux
-            ./build/minthumb_386_linux
-            ./build/minthumb_arm_linux
-            ./build/minthumb_amd64_linux_static
-            ./LICENSE
-            ./README.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

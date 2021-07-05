@@ -78,7 +78,7 @@ func main() {
 	}
 
 	// read and load config files
-	file, err := os.ReadFile(cfgFile)
+	file, err := ioutil.ReadFile(cfgFile)
 	if err != nil {
 		log.Fatalln(err)
 		return

@@ -1,0 +1,13 @@
+[Unit]
+Description=MinThumb Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+PIDFile=/run/minthumb.pid
+ExecStart=/usr/bin/minthumb -config /etc/minthumb/config.yaml
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

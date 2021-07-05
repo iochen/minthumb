@@ -51,10 +51,17 @@ func (m *MinIO) Client() (*minio.Client, error) {
 }
 
 var cfgFile string
+var Version = "v0.0.1 Dev"
 
 func main() {
 	flag.StringVar(&cfgFile, "config", "/etc/gothumb/config.yaml", "config file path")
+	v := flag.Bool("version", false, "version")
 	flag.Parse()
+
+	if *v {
+		fmt.Println("MinThumb Version:", Version)
+		return
+	}
 
 	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
 		out, err := yaml.Marshal(&Config{MinIO: MinIO{}})

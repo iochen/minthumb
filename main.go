@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"flag"
+	"fmt"
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
@@ -33,13 +34,13 @@ type MinIO struct {
 }
 
 type Config struct {
-	Listen string `yaml:"listen"`
-	Quality float32 `yaml:"quality"`
-	X int`yaml:"x"`
-	Y int `yaml:"y"`
-	ThumbPath string `yaml:"thumb_path"`
-	Bucket string `yaml:"bucket"`
-	MinIO  MinIO  `yaml:"minio"`
+	Listen    string  `yaml:"listen"`
+	Quality   float32 `yaml:"quality"`
+	X         int     `yaml:"x"`
+	Y         int     `yaml:"y"`
+	ThumbPath string  `yaml:"thumb_path"`
+	Bucket    string  `yaml:"bucket"`
+	MinIO     MinIO   `yaml:"minio"`
 }
 
 func (m *MinIO) Client() (*minio.Client, error) {
@@ -104,7 +105,7 @@ func main() {
 		thumbPath := filepath.Join(config.ThumbPath, path)
 
 		exist := true
-		_, err := client.StatObject(context.Background(), config.Bucket,thumbPath , minio.StatObjectOptions{})
+		_, err := client.StatObject(context.Background(), config.Bucket, thumbPath, minio.StatObjectOptions{})
 		if err != nil {
 			switch err.(type) {
 			case minio.ErrorResponse:
@@ -120,7 +121,6 @@ func main() {
 				return
 			}
 		}
-
 
 		if exist {
 			thumb, err := client.GetObject(context.Background(), config.Bucket, thumbPath, minio.GetObjectOptions{})
@@ -170,7 +170,7 @@ func main() {
 
 			_, err = client.PutObject(context.Background(), config.Bucket, thumbPath,
 				bytes.NewReader(buf.Bytes()), int64(buf.Len()), minio.PutObjectOptions{
-					ContentType:"image/webp",
+					ContentType: "image/webp",
 				})
 			if err != nil {
 				log.Println(err)
@@ -179,5 +179,6 @@ func main() {
 		}
 	})
 
+	fmt.Println("Listening at:", config.Listen)
 	log.Fatalln(http.ListenAndServe(config.Listen, nil))
 }
